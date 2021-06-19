@@ -25,7 +25,6 @@ export const xeniumQuery = (function () {
                 return selector;
             }
 
-            
             return this;
         }
 
