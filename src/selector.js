@@ -1,4 +1,7 @@
+import { xeniumHelpers } from "./helpers";
+
 export const xeniumSelector = (function () {
+    var helper = xeniumHelpers;
     //////////////////////////////////////
     // --private
 
@@ -67,9 +70,7 @@ export const xeniumSelector = (function () {
                 for (let x = 0; x < amount; x++) {
                     var cap = "}";
 
-                    if (i !== selector.length - 1) {
-                        cap = cap+", "
-                    }
+                    if (i !== selector.length - 1) cap = cap+", ";
 
                     queryString += x + 1 !== amount ? (x + 1)+" & " : (x + 1)+cap;
                 }
@@ -119,8 +120,7 @@ export const xeniumSelector = (function () {
             selector = typeof selector === "string" ? selector.replace(/, |,| ,/gm, ",").split(",") : selector;
 
             // if the selector is not an array turn it into one
-            if (!selector.length) 
-                selector = [selector];
+            if (helper.type(selector) !== "array") selector = [selector];
 
             // make the prepare function return the result of its callback
             return callback(selector, originalSelector);
@@ -137,9 +137,7 @@ export const xeniumSelector = (function () {
     function unravelArray (array) {
         var object = array;
 
-        if (object[0] instanceof Array) {
-            object = unravelArray(object[0]);
-        }
+        if (helper.type(object[0]) === "array") object = unravelArray(object[0]);
 
         return object;
     }
@@ -213,9 +211,7 @@ export const xeniumSelector = (function () {
             }
         }
 
-        if (nodes.length !== 0) {
-            nodes.filter(Boolean);
-        }
+        if (nodes.length !== 0) nodes.filter(Boolean);
 
         return nodes;
     }
@@ -589,9 +585,7 @@ export const xeniumSelector = (function () {
 
                 if (nodeItem) {
                     if (nodeItem.length) {
-                        for (let x = 0; x < nodeItem.length; x++) {
-                            node.push(nodeItem[x]);
-                        }
+                        for (let x = 0; x < nodeItem.length; x++) node.push(nodeItem[x]);
                     } else {
                         node.push(nodeItem);
                     }
@@ -619,9 +613,7 @@ export const xeniumSelector = (function () {
         var nodes = [];
 
         // if the selector is a number send it to the nodes array
-        if (typeof newSelector === "number") {
-            nodes.push(newSelector);
-        }
+        if (helper.type(newSelector) === "number") nodes.push(newSelector);
 
         // get all the queried nodes and place them into the nodes array
         for (let i = 0; i < oldSelector.length; i++) {
@@ -633,29 +625,21 @@ export const xeniumSelector = (function () {
         }
 
         // remove what is currently displayed in the main selector
-        for (let i = 0; i < oldSelector.length; i++) {
-            delete oldSelector[i];
-        }
+        for (let i = 0; i < oldSelector.length; i++) delete oldSelector[i];
 
         // if the nodes array is empty make it null
-        if (nodes.length === 0) {
-            nodes = null;
-        }
+        if (nodes.length === 0) nodes = null;
 
         // if there are nodes pass them to the main selector
         if (nodes) {
-            if (!nodes.length) {
-                nodes = [nodes];
-            }
+            if (!nodes.length) nodes = [nodes];
 
-            for (let i = 0; i < nodes.length; i++) {
-                oldSelector[i] = nodes[i];
-            }
+            for (let i = 0; i < nodes.length; i++) oldSelector[i] = nodes[i];
         
             oldSelector.length = nodes.length;
-        } else {
-            oldSelector.length = 0;
-        }
+        } 
+
+        if (!nodes) oldSelector.length = 0;
     }
 
     /**
@@ -670,13 +654,9 @@ export const xeniumSelector = (function () {
     lib.replaceSelector = function (oldSelector, newSelector) {
         if (!newSelector || !newSelector instanceof Array || !newSelector.length) newSelector = [newSelector];
 
-        for (let i = 0; i < oldSelector.length; i++) {
-            delete oldSelector[i];
-        }
+        for (let i = 0; i < oldSelector.length; i++) delete oldSelector[i];
 
-        for (let i = 0; i < newSelector.length; i++) {
-            oldSelector[i] = newSelector[i];
-        }
+        for (let i = 0; i < newSelector.length; i++) oldSelector[i] = newSelector[i];
 
         oldSelector.length = newSelector.length;
     }
