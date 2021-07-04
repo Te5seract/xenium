@@ -102,7 +102,7 @@ export const xeniumDom = (function () {
                 for (let x = 0; x < valueItems.length; x++) {
 
                     // add classes
-                    if (action.match(/add|\+/)) {
+                    if (action.match(/add|\+/ig)) {
                         helper.exe(
                             helper.exe(this[i], "classList"), // get class list
                             "add", // chain the add method
@@ -111,7 +111,7 @@ export const xeniumDom = (function () {
                     }
 
                     // remove classes
-                    else if (action.match(/delete|remove|\-/)) {
+                    else if (action.match(/delete|remove|\-/ig)) {
                         helper.exe(
                             helper.exe(this[i], "classList"), // get class list
                             "remove", // chain the remove method
@@ -120,7 +120,7 @@ export const xeniumDom = (function () {
                     }
 
                     // swap classes
-                    else if (action.match(/swap|switch|/)) {
+                    else if (action.match(/swap|switch/ig)) {
                         var swap = valueItems[x].replace(/( |)>( |)/, ">").split(">");
                             
                         helper.exe(
@@ -133,6 +133,15 @@ export const xeniumDom = (function () {
                             helper.exe(this[i], "classList"), // get class list
                             "add", // chain the add method
                             swap[1] // param
+                        );
+                    }
+
+                    // has class
+                    else if (action.match(/hasClass|has|contains/ig)) {
+                        return helper.exe(
+                            helper.exe(this[i], "classList"),
+                            "contains",
+                            valueItems[x]
                         );
                     }
                 }

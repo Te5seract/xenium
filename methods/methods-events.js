@@ -141,6 +141,47 @@ export const xeniumEvents = (function () {
 
             return this;
         }
+
+        proto.sendValue = function (elem, append) {
+            var node = query.selector(elem),
+                append = append ? true : false;
+
+            for (let i = 0; i < node.length; i++) {
+                for (let x = 0; x < this.length; x++) {
+                    sendValue(this[x], node[i], append);
+                }
+            }
+
+            return this;
+        }
+    }
+
+    function sendValue (from, to, append) {
+        var isInput = from.localName.match(/input|textarea|select/),
+            currentValue = to.textContent;;
+
+        if (isInput) {
+
+            if (!append) to.textContent = from.value;
+            else to.textContent = currentValue + from.value;
+
+            from.addEventListener("input", (e) => {
+                if (!append) to.textContent = from.value;
+                else to.textContent = currentValue + from.value;
+            });
+
+        }
+        else if (!isInput) {
+
+            if (!append) to.textContent = from.textContent;
+            else to.textContent += from.textContent;
+
+            from.addEventListener("keyup", (e) => {
+                if (!append) to.textContent = from.textContent;
+                else to.textContent += from.textContent;
+            });
+
+        }
     }
 
     return {

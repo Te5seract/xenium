@@ -8,8 +8,8 @@
 
     <title>Document</title>
 
-    <!-- <script type="module" src="src/core.js"></script> -->
-    <script src="merged/xenium.js"></script>
+    <script type="module" src="src/core.js"></script>
+    <!-- <script src="merged/xenium.js"></script> -->
 
     <script src="https://zeptojs.com/zepto.min.js"></script>
 
@@ -19,34 +19,11 @@
 
 <body>
 
-    <a class="toggle-menu blue">Menu</a>
+    <input type="text" class="input-value-to">
 
-    <a class="toggle-menu-2 blue">Menu2</a>
+    <textarea class="textarea-test">asdf</textarea>
 
-    <label for="test-check" class="test-check">
-        check
-        <input type="checkbox" name="" id="test-check">
-    </label>
-
-    <script src="js/xenium-test.js" type="module"></script>
-
-    <input type="file" class="file-stuff">
-
-    <div class="elem">
-        This is an element I use for testing with1
-    </div>
-    <div class="elem">
-        This is an element I use for testing with2
-    </div>
-    <div class="elem">
-        This is an element I use for testing with3
-    </div>
-    <div class="elem">
-        This is an element I use for testing with4
-    </div>
-    <div class="elem">
-        This is an element I use for testing with5
-    </div>
+    <div class="output"></div>
 
 
     <!-- <input class="test-input-value" type="text" value="This is a test value"> -->
@@ -60,7 +37,9 @@
         x("test1").moveContent("test2 {odd}", "[alt='asdf'] {all}, article");
     </script> -->
 
-    <div class="page-background"></div>
+    <div class="page-background other test-class"></div>
+
+    <script src="js/xenium-test.js" type="module"></script>
     
 </body>
 </html>
