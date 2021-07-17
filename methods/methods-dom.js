@@ -34,13 +34,13 @@ export const xeniumDom = (function () {
          * to delete or get an attribute:
          * "title" for multiple: "title, id, class"
          * 
-         * @return {array}
+         * @return {any}
          */
         proto.attr = function (action, value) {
             if (!action | !value) return this;
 
             var valueItems = value.replace(/ ,|, /g, ",").split(","),
-                attrVals = [];;
+                attrVals = [];
 
             for (let i = 0; i < this.length; i++) {
                 for (let x = 0; x < valueItems.length; x++) {
@@ -72,7 +72,7 @@ export const xeniumDom = (function () {
         }
 
         /**
-         * adds / removes / swaps a node's class name(s)
+         * adds / removes / swaps a node's class name(s) or checks if a class exists
          * 
          * @param {string} action 
          * the type of action to perform
@@ -93,7 +93,9 @@ export const xeniumDom = (function () {
          * 
          * swap a class: "old-valueA > new-valueA, old-valueB > new-valueB"
          * 
-         * @return {void}
+         * check if a class exists "has" or "hasClass" or "contains"
+         * 
+         * @return {any}
          */
         proto.classList = function (action, value) {
             var valueItems = value.replace(/ ,|, /g, ",").split(",");
@@ -410,19 +412,20 @@ export const xeniumDom = (function () {
          * gets the dom index for a particular node, intended to be used with the 
          * events method. This method must be stored in a variable to work correctly
          * 
-         * @param {string} selector 
-         * a reference to the element to index
-         * 
          * @return {int}
          */
-        proto.nodeIndex = function (selector) {
-            var nodesOfType = query.selector(selector+"{all}");
+        proto.nodeIndex = function () {
+            var indexes = [],
+                { classList, id } = helper.extractIdentifier(this[0], true),
+                sameElements = query.selector(`${classList+id} {all}`, document);
 
-            for (let i = 0; i < nodesOfType.length; i++) {
-                if (this[0] === nodesOfType[i]) {
-                    return i + 1;
+            for (let i = 0; i < sameElements.length; i++) {
+                for (let x = 0; x < this.length; x++) {
+                    if (sameElements[i] === this[x]) indexes.push(i);
                 }
             }
+
+            return indexes.length > 1 ? indexes : indexes[0];
         }
 
         /**

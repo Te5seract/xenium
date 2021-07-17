@@ -360,5 +360,34 @@ export const xeniumHelpers = (function () {
         return typeof item;
     }
 
+    /**
+     * extracts the class or id from the selected element
+     * 
+     * @param {HTMLElement} element 
+     * 
+     * @return {object}
+     */
+    f.extractIdentifier = function (element, validSelector) {
+        var classes = [],
+            id = "";
+
+        for (let i = 0; i < element.classList.length; i++) classes.push(element.classList[i]);
+
+        classes = classes.length > 1 ? classes : classes[0];
+
+        if (validSelector) {
+            classes = this.type(classes) === "array" ? "."+classes.join(".") : "."+classes;
+
+            if (element.getAttribute("id")) {
+                id ? "#"+element.getAttribute("id") : element.getAttribute("id");
+            }
+        }
+
+        return {
+            id : id,
+            classList : classes
+        }
+    }
+
     return f;
 })();

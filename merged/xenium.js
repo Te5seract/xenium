@@ -330,6 +330,35 @@ const x = (function () {
 
             return typeof item;
         }
+
+        /**
+         * extracts the class or id from the selected element
+         * 
+         * @param {HTMLElement} element 
+         * 
+         * @return {object}
+         */
+        f.extractIdentifier = function (element, validSelector) {
+            var classes = [],
+                id = "";
+
+            for (let i = 0; i < element.classList.length; i++) classes.push(element.classList[i]);
+
+            classes = classes.length > 1 ? classes : classes[0];
+
+            if (validSelector) {
+                classes = this.type(classes) === "array" ? "."+classes.join(".") : "."+classes;
+
+                if (element.getAttribute("id")) {
+                    id ? "#"+element.getAttribute("id") : element.getAttribute("id");
+                }
+            }
+
+            return {
+                id : id,
+                classList : classes
+            }
+        }
     
         return f;
     })();
@@ -1719,19 +1748,20 @@ const x = (function () {
          * gets the dom index for a particular node, intended to be used with the 
          * events method. This method must be stored in a variable to work correctly
          * 
-         * @param {string} selector 
-         * a reference to the element to index
-         * 
          * @return {int}
          */
-        proto.nodeIndex = function (selector) {
-            var nodesOfType = query.selector(selector+"{all}");
+        proto.nodeIndex = function () {
+            var indexes = [],
+                { classList, id } = helper.extractIdentifier(this[0], true),
+                sameElements = query.selector(`${classList+id} {all}`, document);
 
-            for (let i = 0; i < nodesOfType.length; i++) {
-                if (this[0] === nodesOfType[i]) {
-                    return i + 1;
+            for (let i = 0; i < sameElements.length; i++) {
+                for (let x = 0; x < this.length; x++) {
+                    if (sameElements[i] === this[x]) indexes.push(i);
                 }
             }
+
+            return indexes.length > 1 ? indexes : indexes[0];
         }
 
         /**
