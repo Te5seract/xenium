@@ -1751,13 +1751,14 @@ const x = (function () {
          * @return {int}
          */
         proto.nodeIndex = function () {
-            var indexes = [],
-                { classList, id } = helper.extractIdentifier(this[0], true),
-                sameElements = query.selector(`${classList+id} {all}`, document);
+            var indexes = [];
 
-            for (let i = 0; i < sameElements.length; i++) {
-                for (let x = 0; x < this.length; x++) {
-                    if (sameElements[i] === this[x]) indexes.push(i);
+            for (let i = 0; i < this.length; i++) {
+                var { classList, id } = helper.extractIdentifier(this[i], true),
+                    sameElements = query.selector(`${classList+id} {all}`, document);
+
+                for (let x = 0; x < sameElements.length; x++) {
+                    if (sameElements[x] === this[i]) indexes.push(x);
                 }
             }
 
