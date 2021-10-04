@@ -471,7 +471,7 @@ export const xeniumDom = (function () {
          * this method cannot be chained
          * 
          * @param {string} value 
-         * the value can be a classname ir or tagname
+         * the value can be a classname or tagname
          * 
          * @param {function} callback
          * fires a callback function on success

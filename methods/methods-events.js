@@ -21,13 +21,11 @@ export const xeniumEvents = (function () {
         var found = false;
 
         for (let i = 0; i < identifier.length; i++) {
-            if (target.hasAttribute("class") && target.classList.contains(identifier[i]) || target.hasAttribute("id") && target.getAttribute("id") === identifier[i]
-            || target.hasAttribute(identifier)) {
-                found = true;
-            }
-            else if (target.localName === identifier[i]) {
-                found = true;
-            }
+            if (target.hasAttribute("class") && target.classList.contains(identifier[i]) || 
+                target.hasAttribute("id") && target.getAttribute("id") === identifier[i] || 
+                target.hasAttribute(identifier)) found = true;
+            
+            else if (target.localName === identifier[i]) found = true;
         }
 
         return found;
