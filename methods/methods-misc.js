@@ -216,6 +216,10 @@ export const xeniumMisc = (function () {
             if (includeHeaders) xh.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
             xh.onreadystatechange = function () {
+                if (xh.readyState === 4) {
+                    options.complete ? options.complete() : null;
+                }
+
                 if (xh.readyState === 4 && xh.status === 200) {
                     var response = xh.responseText,
                         json = "";
