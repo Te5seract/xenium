@@ -1399,6 +1399,11 @@ const x = (function () {
                     else if (action.match(/get|getAttr|getAttribute/)) {
                         attrVals.push(helper.exe(this[i], "getAttribute", valueItems[x]));
                     }
+
+                    // has attribute
+                    else if (action.match(/has|have/igm)) {
+                        helper.exe(this[i], "hasAttribute", valueItems[x]);
+                    }
                 }
             }
 

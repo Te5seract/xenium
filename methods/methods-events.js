@@ -76,7 +76,7 @@ export const xeniumEvents = (function () {
                  * @param {string} identifier 
                  * the target identifier (could be a class name or id or tag name)
                  * 
-                 * @param {function} callback 
+                 * @param {function} [callback] 
                  * (optional) when the target is found the callback will execute
                  * 
                  */
@@ -103,7 +103,7 @@ export const xeniumEvents = (function () {
                  * @param {string} eventType 
                  * the type of event to listen for
                  * 
-                 * @param {function} callback 
+                 * @param {function} [callback] 
                  * if the event is detected the callback will fire
                  */
                 e.isEvent = function (eventType, callback) {
@@ -151,34 +151,6 @@ export const xeniumEvents = (function () {
             }
 
             return this;
-        }
-    }
-
-    function sendValue (from, to, append) {
-        var isInput = from.localName.match(/input|textarea|select/),
-            currentValue = to.textContent;;
-
-        if (isInput) {
-
-            if (!append) to.textContent = from.value;
-            else to.textContent = currentValue + from.value;
-
-            from.addEventListener("input", (e) => {
-                if (!append) to.textContent = from.value;
-                else to.textContent = currentValue + from.value;
-            });
-
-        }
-        else if (!isInput) {
-
-            if (!append) to.textContent = from.textContent;
-            else to.textContent += from.textContent;
-
-            from.addEventListener("keyup", (e) => {
-                if (!append) to.textContent = from.textContent;
-                else to.textContent += from.textContent;
-            });
-
         }
     }
 
