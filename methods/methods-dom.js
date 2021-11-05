@@ -46,25 +46,25 @@ export const xeniumDom = (function () {
                 for (let x = 0; x < valueItems.length; x++) {
 
                     // set attribute
-                    if (action.match(/set|setAttr|setAttribute|apply/i)) {
+                    if (action.match(/set|setAttr|setAttribute|apply/igm)) {
                         var values = valueItems[x].split("=");
 
                         helper.exe(this[i], "setAttribute", values[0], values[1]);
                     }
 
                     // delete attribute
-                    else if (action.match(/del|delAttr|delete|deleteAttribute|remove|removeAttr|removeAttribute/)) {
+                    else if (action.match(/del|delAttr|delete|deleteAttribute|remove|removeAttr|removeAttribute/igm)) {
                         helper.exe(this[i], "removeAttribute", valueItems[x]);
                     }
 
                     // get attribute
-                    else if (action.match(/get|getAttr|getAttribute/)) {
+                    else if (action.match(/get|getAttr|getAttribute/igm)) {
                         attrVals.push(helper.exe(this[i], "getAttribute", valueItems[x]));
                     }
 
                     // has attribute
                     else if (action.match(/has|have/igm)) {
-                        helper.exe(this[i], "hasAttribute", valueItems[x]);
+                        attrVals.push(helper.exe(this[i], "hasAttribute", valueItems[x]));
                     }
                 }
             }
@@ -73,7 +73,11 @@ export const xeniumDom = (function () {
 
             attrVals = attrVals.length === 1 ? attrVals[0] : attrVals;
 
-            return attrVals.length > 0 ? attrVals : false;
+            if (attrVals instanceof Array) {
+                return attrVals.length > 0 ? attrVals : false;
+            }
+
+            return attrVals;
         }
 
         /**
