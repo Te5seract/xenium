@@ -96,6 +96,35 @@ export const xeniumQuery = (function () {
         }
 
         /**
+         * removes items from the query selector that has a particular 
+         * type of identifier
+         * 
+         * @param {string} selector 
+         * multiple selectors can be used so long as they're split by
+         * a comma
+         * 
+         * @return {void}
+         */
+        proto.exclude = function (selector) {
+            var selectorSplit = selector.split(",");
+
+            for (let i = 0; i < selectorSplit.length; i++) {
+                var exclude = query.selector(selectorSplit[i]),
+                    newQuery = [];
+
+                for (let x = 0; x < this.length; x++) {
+                    if (this[x] !== exclude[0]) {
+                        newQuery.push(this[x]);
+                    }
+                }
+
+                query.replaceSelector(this, newQuery);
+            }
+
+            return this;
+        }
+
+        /**
          * applies a flag to each node in the main selector
          * 
          * @param {string} delimiter 
