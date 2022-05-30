@@ -13,7 +13,7 @@ import { xeniumMisc } from "../methods/methods-misc.js";
 // context
 import { xeniumContext } from "./selector-context.js";
 
-export const x = (function () {
+export var x = (function () {
     var wrapper = [],
         sel,
         proto = Xenium.prototype,
@@ -40,18 +40,6 @@ export const x = (function () {
 
     proto.splice = wrapper.splice;
 
-    // query methods 
-    xeniumQuery.set(proto);
-
-    // dom methods
-    xeniumDom.set(proto);
-
-    // events
-    xeniumEvents.set(proto);
-
-    // misc methods
-    xeniumMisc.set(proto);
-
     /**
      * @param {array|number|string|object} selector
      * if nothing is passed into the main selector, the main selector
@@ -70,5 +58,21 @@ export const x = (function () {
         return new Xenium([document]);
     }
 
+    // query methods 
+    xeniumQuery.set(proto, sel);
+
+    // dom methods
+    xeniumDom.set(proto, sel);
+
+    // events
+    xeniumEvents.set(proto, sel);
+
+    // misc methods
+    xeniumMisc.set(proto, sel);
+
     return sel;
 })();
+
+//x.ajax = function () {
+    //return "hi";
+//}

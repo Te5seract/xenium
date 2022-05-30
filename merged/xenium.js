@@ -2131,6 +2131,8 @@ const x = (function () {
 
             document.execCommand("copy");
 
+            document.querySelector("._xenium_clipboard").remove();
+
             return this;
         }
 

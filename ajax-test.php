@@ -1,7 +1,4 @@
 <?php
-
-var_dump($_FILES);
-
 if (isset($_POST["package1"])) {
     // echo json_encode([
     //     "success" => true,

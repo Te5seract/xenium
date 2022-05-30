@@ -369,14 +369,18 @@ export const xeniumHelpers = (function () {
      */
     f.extractIdentifier = function (element, validSelector) {
         var classes = [],
-            id = "";
+            id = "",
+            tag = element.localName ? element.localName : "";
 
-        for (let i = 0; i < element.classList.length; i++) classes.push(element.classList[i]);
+        for (let i = 0; i < element.classList.length; i++) {
+            classes.push(element.classList[i]);
+            tag = element.localName;
+        }
 
         classes = classes.length > 1 ? classes : classes[0];
 
         if (validSelector) {
-            classes = this.type(classes) === "array" ? "."+classes.join(".") : "."+classes;
+            if (classes) classes = this.type(classes) === "array" ? "."+classes.join(".") : "."+classes;
 
             if (element.getAttribute("id")) {
                 id ? "#"+element.getAttribute("id") : element.getAttribute("id");
@@ -385,7 +389,8 @@ export const xeniumHelpers = (function () {
 
         return {
             id : id,
-            classList : classes
+            classList : classes && classes.length ? classes : "",
+            tag : tag
         }
     }
 

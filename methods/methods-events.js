@@ -62,68 +62,65 @@ export const xeniumEvents = (function () {
 
             for (let i = 0; i < this.length; i++) {
                 for (let x = 0; x < type.length; x++) {
-                    helper.exe(this[i], "addEventListener", type[x], fn);
+                    helper.exe(this[i], "addEventListener", type[x], callback);
                 }
-            }
-
-            function fn (e) {
-                var target = e.target;
-
-                /**
-                 * checks if the target of the event has the same class / id / tag name
-                 * as the clicked element 
-                 * 
-                 * @param {string} identifier 
-                 * the target identifier (could be a class name or id or tag name)
-                 * 
-                 * @param {function} [callback] 
-                 * (optional) when the target is found the callback will execute
-                 * 
-                 */
-                e.isTarget = function (identifier, callback) {
-                    identifier = identifier.replace(/\.|#/g, "").replace(/ ,|, /g, ",").split(",");
-                    var callbackResult;
-
-                    if (isTarget(target, identifier)) {
-
-                        if (callback) callbackResult = callback();
-                        else callbackResult = true;
-
-                    } else {
-                        if (callback) callbackResult = null;
-                        else callbackResult = false;
-                    }
-
-                    return callbackResult;
-                }
-
-                /**
-                 * checks for an event type
-                 * 
-                 * @param {string} eventType 
-                 * the type of event to listen for
-                 * 
-                 * @param {function} [callback] 
-                 * if the event is detected the callback will fire
-                 */
-                e.isEvent = function (eventType, callback) {
-                    var result = false,
-                        callbackResult;
-
-                    if (e.type === eventType) {
-                        if (callback) callbackResult = callback();
-                        result = true;
-                    }
-
-                    return callbackResult;
-                }
-
-                callback ? callback(e, target) : null;
             }
 
             return this;
         }
 
+        /**
+         * checks for an event type
+         * 
+         * @param {string} eventType 
+         * the type of event to listen for
+         * 
+         * @param {function} [callback] 
+         * if the event is detected the callback will fire
+         */
+        proto.isEvent = function (eventType, callback) {
+            var result = false;
+
+            if (this[0].type === eventType) {
+                if (callback) {
+                    callback();
+                    return;
+                }
+
+                result = true;
+            }
+
+            return result;
+        }
+
+        /**
+         * checks if the target of the event has the same class / id / tag name
+         * as the clicked element 
+         * 
+         * @param {string} identifier 
+         * the target identifier (could be a class name or id or tag name)
+         * 
+         * @param {function} [callback] 
+         * (optional) when the target is found the callback will execute
+         * 
+         */
+        proto.isTarget = function (identifier, callback) {
+            identifier = identifier.replace(/\.|#/g, "").replace(/ ,|, /g, ",").split(",");
+            var callbackResult;
+
+            if (isTarget(this[0], identifier)) {
+
+                if (callback) callbackResult = callback();
+                else callbackResult = true;
+
+            } else {
+                if (callback) callbackResult = null;
+                else callbackResult = false;
+            }
+
+            return callbackResult;
+        }
+        
         /**
          * executes once the document has loaded
          * 

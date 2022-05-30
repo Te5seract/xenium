@@ -5,7 +5,7 @@ export const xeniumMisc = (function () {
     var query = xeniumSelector,
         helper = xeniumHelpers;
 
-    function methods (proto) {
+    function methods (proto, sel) {
         /**
          * gets the value of an element or multiple elements
          * this method cannot be chained
@@ -101,6 +101,8 @@ export const xeniumMisc = (function () {
             textarea.select();
 
             document.execCommand("copy");
+
+            document.querySelector("._xenium_clipboard").remove();
 
             return this;
         }
@@ -240,6 +242,46 @@ export const xeniumMisc = (function () {
             }
 
             xh.send(data);
+        }
+
+        /**
+         * this function will unpack ajax data
+         *
+         * @param {object} data
+         * the data to unpack
+         *
+         * @return string
+        */
+        function unpackData (data) {
+            var dataStr = "",
+                i = 0;
+
+            const size = Object.keys(data).length - 1;
+
+            for (let item in data) {
+                dataStr += `${encodeURIComponent(item)}=${encodeURIComponent(data[item])}`;
+
+                dataStr += i !== size ? "&" : "";
+
+                i++;
+            }
+
+            return dataStr;
+        }
+
+        sel.post = function (url, options, callback) {
+            var xr = new XMLHttpRequest(),
+                data = options.data ? unpackData(options.data) : null;
+
+            xr.open("POST", url);
+
+            xr.onreadystatechange = function () {
+                if (xr.readyState === 4) {}
+
+                if (xr.readyState === 4 && xr.status === 200) {}
+            }
+
+            xr.send(data);
         }
 
         /**
@@ -651,8 +693,8 @@ export const xeniumMisc = (function () {
     }
 
     return {
-        set : function (proto) {
-            methods(proto);
+        set : function (proto, sel) {
+            methods(proto, sel);
         }
     }
 })();

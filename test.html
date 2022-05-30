@@ -1,21 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+    div {
+        width: 100px;
+        height: 100px;
+        background-color: #333;
+        margin: 10px;
+    }
+    </style>
+</head>
+<body>
 
-<main class="{[menuClass]}">
-    <header>
-        {[header]}
-        {[1]}
-        {[2]}
-        {[3]}
-        {[4]}
-    </header>
+    <div></div>
+    <div class="item"></div>
+    <div></div>
+    <div id="item"></div>
+    <div></div>
+    
+    <script type="module">
+        import { x } from "./src/core.js";
 
-    <main>
-        {[body]}  
-        {[a]}
-        {[b]}
-    </main>
+        x("div {all}").events("click", function (e) {
+        });
 
-    <footer>
-        {[footer]}
-        {[somethingElse]}
-    </footer>
-</main>
+        // console.log(x.post());
+        
+        x.post("ajax-test.php", {
+            headers : {},
+            data : {
+                itemOne : 1,
+                itemTwo : 2,
+                "item three" : "third:item"
+            }
+        }, function () {});
+    </script>
+</body>
+</html>

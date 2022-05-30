@@ -427,8 +427,8 @@ export const xeniumDom = (function () {
             var indexes = [];
 
             for (let i = 0; i < this.length; i++) {
-                var { classList, id } = helper.extractIdentifier(this[i], true),
-                    sameElements = query.selector(`${classList+id} {all}`, document);
+                var { classList, id, tag } = helper.extractIdentifier(this[i], true),
+                    sameElements = query.selector(`${classList+id+tag} {all}`, document);
 
                 for (let x = 0; x < sameElements.length; x++) {
                     if (sameElements[x] === this[i]) indexes.push(x);
