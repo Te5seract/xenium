@@ -284,8 +284,6 @@ export const xeniumMisc = (function () {
             xr.send(data);
         }
 
-        sel.get = function () {}
-
         /**
          * gets the file list from an input node
          * 
