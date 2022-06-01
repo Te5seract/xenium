@@ -102,6 +102,7 @@ export const xeniumSelector = (function () {
             else if (isString(selector) && selector.match(/{body}|{b}/i)) selector = document.body;
             else if (isString(selector) && selector.match(/{w}/i)) selector = window;
             else if (isString(selector) && selector.match(/{head}|{h}/i)) selector = document.head;
+            else if (isString(selector) && selector.match(/@/) && !selector.match(/,/)) selector = `[${selector.replace(/@/g, "")}]`;
 
             //////////////////////////////////////
             // selector wrappers
@@ -118,6 +119,12 @@ export const xeniumSelector = (function () {
             selector = unravelArray(selector);
 
             selector = typeof selector === "string" ? selector.replace(/, |,| ,/gm, ",").split(",") : selector;
+
+            if (selector.length) {
+                selector.forEach((sel, i) => {
+                    if (sel.match(/@/)) selector[i] = `[${selector[i].replace(/@/g, "")}]`;
+                });
+            }
 
             // if the selector is not an array turn it into one
             if (helper.type(selector) !== "array") selector = [selector];
@@ -540,7 +547,6 @@ export const xeniumSelector = (function () {
      * a parent node to query a child element from within
      * 
      * @return {string|array|object|number}
-     * 
      */
     lib.selector = function (selector, within) {
         // prepare selector for main query

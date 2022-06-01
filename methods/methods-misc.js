@@ -229,7 +229,6 @@ export const xeniumMisc = (function () {
                         try {
                             json = JSON.parse(response);
                         } catch (er) {
-                            // 
                         }
 
                         ajaxData = {
@@ -250,38 +249,289 @@ export const xeniumMisc = (function () {
          * @param {object} data
          * the data to unpack
          *
-         * @return string
+         * @return {string}
         */
         function unpackData (data) {
             var dataStr = "",
                 i = 0;
 
-            const size = Object.keys(data).length - 1;
+            if (data instanceof Object) {
+                const size = Object.keys(data).length - 1;
 
-            for (let item in data) {
-                dataStr += `${encodeURIComponent(item)}=${encodeURIComponent(data[item])}`;
+                for (let item in data) {
+                    dataStr += `${encodeURIComponent(item)}=${encodeURIComponent(data[item])}`;
 
-                dataStr += i !== size ? "&" : "";
+                    dataStr += i !== size ? "&" : "";
 
-                i++;
+                    i++;
+                }
             }
 
             return dataStr;
         }
 
-        sel.post = function (url, options, callback) {
+        /**
+         * this function handles ajax requests
+         *
+         * @param {object} options
+         *
+         * @param {string} options.url
+         * the url to send the request to
+         *
+         * @param {object} options.data
+         * the data to send with the request (key value pairs)
+         *
+         * @param {string} options.method
+         * the request method (GET, POST...)
+         *
+         * @param {callable} options.done
+         * this callback will execute if the request is complete
+         *
+         * @param {callable} options.error
+         * this callback will execute if there is an error
+         *
+         * @param {callable} options.success
+         * this callback will execute if the request is successful
+         *
+         * @param {obect} options.headers
+         * this is to set request headers, they're key/value pairs:
+         * "Content-Type" : "application/json"
+         *
+         * @param {FormData} options.formData
+         * this will take a form data object for media uploads or just
+         * general form data stuff
+         *
+         * @return {void}
+        */
+        function xhr (options) {
             var xr = new XMLHttpRequest(),
-                data = options.data ? unpackData(options.data) : null;
+                url = options.url ? options.url : "",
+                data = options.data ? unpackData(options.data) : null,
+                method = options.method ? options.method : "POST",
+                done = options.done ? options.done : null,
+                error = options.error ? options.error : null,
+                success = options.success ? options.success : null,
+                headers = options.headers ? options.headers : null,
+                formData = options.formData ? options.formData : null;
 
-            xr.open("POST", url);
-
-            xr.onreadystatechange = function () {
-                if (xr.readyState === 4) {}
-
-                if (xr.readyState === 4 && xr.status === 200) {}
+            if (method.match(/GET/i) && data) {
+                url = `${url}?${data}`;
             }
 
-            xr.send(data);
+            xr.open(method, url);
+
+            if (!formData) {
+                xr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            }
+
+            if (headers) {
+                for (let key in headers) {
+                    xr.setRequestHeader(key, headers[key]);
+                }
+            }
+
+            xr.onreadystatechange = function () {
+                if (xr.readyState === 4 && xr.status === 200) {
+                    let response = {};
+
+                    try {
+                        response.json = JSON.parse(xr.responseText);
+                    } catch (e) {
+                        response.json = null
+                    }
+
+                    response.text = xr.responseText;
+
+                    success ? success(response) : success;
+                }
+
+                if (xr.status > 400 && xr.readyState === 4) {
+                    error ? error() : error;
+                }
+
+                if (xr.readyState === 4) {
+                    done ? done() : done;
+                }
+            }
+
+            if (!method.match(/GET/i)) {
+                xr.send(data || formData);
+            } else {
+                xr.send();
+            }
+        }
+
+        /**
+         * this method will send a post request
+         *
+         * @param {string} url
+         * the url to send the request to
+         *
+         * @param {object} options
+         *
+         * @param {object} options.data
+         * the data to send with the request (key value pairs)
+         *
+         * @param {callable} options.done
+         * this callback will execute if the request is complete
+         *
+         * @param {callable} options.error
+         * this callback will execute if there is an error
+         *
+         * @param {callable} options.success
+         * this callback will execute if the request is successful
+         *
+         * @param {obect} options.headers
+         * this is to set request headers, they're key/value pairs:
+         * "Content-Type" : "application/json"
+         *
+         * @param {FormData} options.formData
+         * this will take a form data object for media uploads or just
+         * general form data stuff
+         *
+         * @return {void}
+        */
+        sel.post = function (url, options) {
+            var data = options.data ? options.data : null,
+                done = options.done ? options.done : null,
+                error = options.error ? options.error : null,
+                success = options.success ? options.success : null,
+                headers = options.headers ? options.headers : null,
+                formData = options.formData ? options.formData : null;
+
+            xhr({
+                method : "POST",
+                url : url,
+                data : data,
+                done : () => {
+                    done ? done() : done
+                },
+                error : () => {
+                    error ? error() : error;
+                },
+                success : (data) => {
+                    success ? success(data) : success;
+                },
+                formData : formData,
+                headers : headers
+            });
+        }
+
+        /**
+         * this method will send a get request
+         *
+         * @param {string} url
+         * the url to send the request to
+         *
+         * @param {object} options
+         *
+         * @param {object} options.data
+         * the data to send with the request (key value pairs)
+         *
+         * @param {callable} options.done
+         * this callback will execute if the request is complete
+         *
+         * @param {callable} options.error
+         * this callback will execute if there is an error
+         *
+         * @param {callable} options.success
+         * this callback will execute if the request is successful
+         *
+         * @param {obect} options.headers
+         * this is to set request headers, they're key/value pairs:
+         * "Content-Type" : "application/json"
+         *
+         * @param {FormData} options.formData
+         * this will take a form data object for media uploads or just
+         * general form data stuff
+         *
+         * @return {void}
+        */
+        sel.get = function (url, options) {
+            var data = options.data ? options.data : null,
+                done = options.done ? options.done : null,
+                error = options.error ? options.error : null,
+                success = options.success ? options.success : null,
+                headers = options.headers ? options.headers : null,
+                formData = options.formData ? options.formData : null;
+
+            xhr({
+                method : "GET",
+                url : url,
+                data : data,
+                done : () => {
+                    done ? done() : done
+                },
+                error : () => {
+                    error ? error() : error;
+                },
+                success : (data) => {
+                    success ? success(data) : success;
+                },
+                formData : formData,
+                headers : headers
+            });
+        }
+
+        /**
+         * this method will send any request type that
+         * is specified
+         *
+         * @param {string} url
+         * the url to send the request to
+         *
+         * @param {object} options
+         *
+         * @param {object} options.data
+         * the data to send with the request (key value pairs)
+         *
+         * @param {string} options.method
+         * the request method (GET, POST...)
+         *
+         * @param {callable} options.done
+         * this callback will execute if the request is complete
+         *
+         * @param {callable} options.error
+         * this callback will execute if there is an error
+         *
+         * @param {callable} options.success
+         * this callback will execute if the request is successful
+         *
+         * @param {obect} options.headers
+         * this is to set request headers, they're key/value pairs:
+         * "Content-Type" : "application/json"
+         *
+         * @param {FormData} options.formData
+         * this will take a form data object for media uploads or just
+         * general form data stuff
+         *
+         * @return {void}
+        */
+        sel.xhr = function (url, options) {
+            var data = options.data ? options.data : null,
+                method = options.method ? options.method : "POST",
+                done = options.done ? options.done : null,
+                error = options.error ? options.error : null,
+                success = options.success ? options.success : null,
+                headers = options.headers ? options.headers : null,
+                formData = options.formData ? options.formData : null;
+
+            xhr({
+                method : method,
+                url : url,
+                data : data,
+                done : () => {
+                    done ? done() : done
+                },
+                error : () => {
+                    error ? error() : error;
+                },
+                success : (data) => {
+                    success ? success(data) : success;
+                },
+                formData : formData,
+                headers : headers
+            });
         }
 
         /**

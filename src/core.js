@@ -72,7 +72,3 @@ export var x = (function () {
 
     return sel;
 })();
-
-//x.ajax = function () {
-    //return "hi";
-//}

@@ -49,7 +49,7 @@ export const xeniumDom = (function () {
                     if (action.match(/set|setAttr|setAttribute|apply/igm)) {
                         var values = valueItems[x].split("=");
 
-                        helper.exe(this[i], "setAttribute", values[0], values[1]);
+                        helper.exe(this[i], "setAttribute", values[0], values[1] ? values[1] : "");
                     }
 
                     // delete attribute

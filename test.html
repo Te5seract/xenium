@@ -13,29 +13,33 @@
     </style>
 </head>
 <body>
+    <div x-is-toggled="false"></div>
+    <div x-is-toggled="false"></div>
+    <div x-is-toggled="false"></div>
+    <div x-is-toggled="false"></div>
+    <div x-is-toggled="false"></div>
 
-    <div></div>
-    <div class="item"></div>
-    <div></div>
-    <div id="item"></div>
-    <div></div>
+    <input type="file" x-file-uploader>
     
     <script type="module">
         import { x } from "./src/core.js";
 
-        x("div {all}").events("click", function (e) {
-        });
+        // x("@x-file-uploader").events("change", function (e) {
+        //     var form = new FormData();
 
-        // console.log(x.post());
-        
-        x.post("ajax-test.php", {
-            headers : {},
-            data : {
-                itemOne : 1,
-                itemTwo : 2,
-                "item three" : "third:item"
-            }
-        }, function () {});
+        //     form.append("file", this.files[0]);
+        //     form.append("send-type", "file");
+
+        //     x.xhr("ajax-test.php", {
+        //         method : "DELETE",
+        //         data : {
+        //             package1 : true
+        //         },
+        //         success : ({json}) => {
+        //             console.log(json);
+        //         }
+        //     });
+        // });
     </script>
 </body>
 </html>
