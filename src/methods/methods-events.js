@@ -1,5 +1,5 @@
-import { xeniumHelpers } from "../src/helpers.js";
-import { xeniumSelector } from "../src/selector.js";
+import { xeniumHelpers } from "../helpers.js";
+import { xeniumSelector } from "../selector.js";
 
 export const xeniumEvents = (function () {
     var query = xeniumSelector;

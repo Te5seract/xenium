@@ -1,8 +1,8 @@
-import { xeniumSelector } from "../src/selector.js";
-import { xeniumHelpers } from "../src/helpers.js";
+import { xeniumSelector } from "../selector.js";
+import { xeniumHelpers } from "../helpers.js";
 
 // context
-import { xeniumContext } from "../src/selector-context.js";
+import { xeniumContext } from "../selector-context.js";
 
 export const xeniumQuery = (function () {
     var query = xeniumSelector,

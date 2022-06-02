@@ -1,0 +1,25 @@
+{
+  "name": "xenium",
+  "version": "2.0.0",
+  "description": "javascript helper library",
+  "main": "src/core.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build" : "npx webpack build --config webpack.config.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Te5seract/xenium.git"
+  },
+  "author": "Isaac Astley",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Te5seract/xenium/issues"
+  },
+  "homepage": "https://github.com/Te5seract/xenium#readme",
+  "devDependencies": {
+    "terser-webpack-plugin": "^5.3.1",
+    "webpack": "^5.72.1",
+    "webpack-cli": "^4.9.2"
+  }
+}

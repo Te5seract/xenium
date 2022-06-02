@@ -5,10 +5,10 @@ import { xeniumSelector } from "./selector.js";
 import { xeniumHelpers } from "./helpers.js";
 
 // methods
-import { xeniumQuery } from "../methods/methods-query.js";
-import { xeniumDom } from "../methods/methods-dom.js";
-import { xeniumEvents } from "../methods/methods-events.js";
-import { xeniumMisc } from "../methods/methods-misc.js";
+import { xeniumQuery } from "./methods/methods-query.js";
+import { xeniumDom } from "./methods/methods-dom.js";
+import { xeniumEvents } from "./methods/methods-events.js";
+import { xeniumMisc } from "./methods/methods-misc.js";
 
 // context
 import { xeniumContext } from "./selector-context.js";
@@ -72,3 +72,5 @@ export var x = (function () {
 
     return sel;
 })();
+
+window.x = x;

@@ -11,6 +11,8 @@
         margin: 10px;
     }
     </style>
+
+    <script src="./dist/xenium.min.js"></script>
 </head>
 <body>
     <div x-is-toggled="false"></div>
@@ -21,25 +23,8 @@
 
     <input type="file" x-file-uploader>
     
-    <script type="module">
-        import { x } from "./src/core.js";
-
-        // x("@x-file-uploader").events("change", function (e) {
-        //     var form = new FormData();
-
-        //     form.append("file", this.files[0]);
-        //     form.append("send-type", "file");
-
-        //     x.xhr("ajax-test.php", {
-        //         method : "DELETE",
-        //         data : {
-        //             package1 : true
-        //         },
-        //         success : ({json}) => {
-        //             console.log(json);
-        //         }
-        //     });
-        // });
+    <script>
+        console.log(x());
     </script>
 </body>
 </html>
