@@ -1,5 +1,5 @@
 {
-  "name": "xenium",
+  "name": "@te5seract/xenium",
   "version": "2.0.0",
   "description": "javascript helper library",
   "main": "src/core.js",
