@@ -2,7 +2,7 @@ import { xeniumHelpers } from "../helpers.js";
 import { xeniumSelector } from "../selector.js";
 
 export const xeniumDom = (function () {
-    function methods (proto) {
+    function methods (proto, sel) {
         var helper = xeniumHelpers,
             query = xeniumSelector;
 
@@ -295,6 +295,35 @@ export const xeniumDom = (function () {
         }
 
         /**
+         * makes elements
+         * 
+         * @param {string} node 
+         * the type of elements to make
+         * 
+         * @param {int} amount 
+         * (optional) the amount of elements to make
+         * 
+         * @return {self}
+         */
+        sel.make = function (node, amount) {
+            if (!node) return;
+
+            var amount = !amount ? 1 : amount,
+                nodes = [];
+
+            for (let x = 0; x < amount; x++) {
+                var newNode = document.createElement(node);
+
+                nodes.push(newNode);
+            }
+
+            return this(nodes);
+
+            //return nodes.length && nodes.length > 1 ? nodes : nodes[0];
+
+        }
+
+        /**
          * appends an element to  the main selector element
          * 
          * @param {array} nodes 
@@ -302,6 +331,8 @@ export const xeniumDom = (function () {
          * @return {void}
          */
         proto.append = function (...nodes) {
+           var nodes = helper.unravelArray(nodes[0]);
+
             for (let i = 0; i < this.length; i++) {
                 for (let x = 0; x < nodes.length; x++) {
                     nodes[x] = helper.unravelArray(nodes[x]);
@@ -555,8 +586,8 @@ export const xeniumDom = (function () {
     } // end methods
 
     return {
-        set : function (proto) {
-            methods(proto);
+        set : function (proto, sel) {
+            methods(proto, sel);
         }
     }
 })();
