@@ -1,6 +1,9 @@
 export const xeniumHelpers = (function () {
     var f = {};
 
+    // hooks
+    f.hooks = {};
+
     /**
      * executes a function 
      * 
@@ -391,6 +394,47 @@ export const xeniumHelpers = (function () {
             id : id,
             classList : classes && classes.length ? classes : "",
             tag : tag
+        }
+    }
+
+    /**
+     * sets a hook that can be accessed throughout the internal
+     * library for development
+     *
+     * @param {string} name
+     * the name of the hook
+     *
+     * @param {array} ...params
+     * parameters to send to the hook
+     *
+     * @return {void}
+    */
+    f.setHook = function (name, ...params) {
+        f.hooks[name] = params;
+    }
+
+    f.appendHook = function (name, ...params) {
+        if (f.hooks[name]) {
+            f.hooks[name].push(params);
+        }
+    }
+
+    /**
+     * gets a hook that has been set and if parameters
+     * have been provided the callback param can get
+     * them
+     *
+     * @param {string} name
+     * the name of the hook to get
+     *
+     * @param {callable} callback
+     * this function will execute if the hook is found
+     *
+     * @return {void}
+    */
+    f.getHook = function (name, callback) {
+        if (f.hooks[name]) {
+            return callback(f.hooks[name]);
         }
     }
 

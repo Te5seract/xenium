@@ -764,181 +764,28 @@ export const xeniumMisc = (function () {
             return this;
         }
 
-        /**
-         * fills out an HTML module works with an ajax request
-         * 
-         * @param {function} callback 
-         * @callback 
-         * 
-         * @param {object} module
-         * the module editing library
-         * 
-         * @param {*} before 
-         * @param {*} after 
-         * @returns 
-         */
-        proto.module = function (callback, before, after) {
-            var markup = this[0],
-                beforeOriginal = before ? before : "{{",
-                afterOriginal = after ? after : "}}",
-                lib = {};
+        proto.data = function (...values) {
+            const result = helper.getHook("init_hook", ([elem, sel]) => {
+                if (!sel.match(/@/)) return;
 
-            before = helper.escape(beforeOriginal);
-            after = helper.escape(afterOriginal);
 
-            /**
-             * replaces placeholder content with the desired text/html
-             * 
-             * @param {string} placeholderName 
-             * the name of the placeholder, eg: {{body}} would be "body"
-             * 
-             * @param {string} content 
-             * the content to replace the placeholder with, eg
-             * 
-             * {{body}} will turn into the value passed in
-             * 
-             * @return {string}
-             */
-            lib.placeholder = function (placeholderName, content) {
-                var reg = new RegExp(`${before}${placeholderName}${after}`, "igm");
+                sel = `${sel.replace(/@| /g, "")}`;
+                sel = sel.split(",");
 
-                markup = markup.replace(reg, content);
-
-                return markup;
-            }
-
-            /**
-             * wraps the placeholder in an element
-             * 
-             * @param {string} placeholderName 
-             * the name of the placeholder, eg: {{body}} would be "body"
-             * 
-             * multiple placeholders can be wrapper in an element at once, separate
-             * each placeholder with a comma, eg:
-             * 
-             * "body, header, footer"
-             * 
-             * @param {string} wrap 
-             * the type of element to wrap the placeholder in
-             * 
-             * @param {string} attr 
-             * the attributes to give to the wrapper element, multiple new attributes 
-             * can be applied at once, eg:
-             * 
-             * "class=wrapper, title=Wrapper Element"
-             * 
-             * @return {string}
-             */
-            lib.wrap = function (placeholderName, wrap, attr) {
-                var placeholders = placeholderName.split(/ ,|, |,/g);
-
-                for (let i = 0; i < placeholders.length; i++) {
-                    var elem = document.createElement(wrap);
-
-                    if (attr) {
-                        var attrs = attr.split(/ ,|, |,/);
-    
-                        for (let x = 0; x < attrs.length; x++) {
-                            var key = attrs[x].split(/=/)[0],
-                                value = attrs[x].split(/=/)[1];
-    
-                            helper.exe(elem, "setAttribute", key, value);
-                        }
+                if (values.length) {
+                    for (let i = 0; i < this.length; i++) {
+                        values.forEach((value, x) => {
+                            helper.exe(this[i], "setAttribute", sel[x], value);
+                        });
                     }
 
-                    var reg = new RegExp(`${before}${placeholders[i]}${after}`, "igm");
-
-                    elem.innerHTML = `${beforeOriginal}${placeholders[i]}${afterOriginal}`;
-
-                    markup = markup.replace(reg, elem.outerHTML);
+                    return this;
                 }
 
-                return markup;
-            }
+                return helper.exe(this[0], "getAttribute", sel[0]);
+            });
 
-            /**
-             * the container to wrap the entire module in
-             * 
-             * @param {string} element 
-             * the type of element to wrap the module in
-             * 
-             * @param {string} attr 
-             * the attributes to give to the wrapper element, multiple new attributes 
-             * can be applied at once, eg:
-             * 
-             * "class=wrapper, title=Wrapper Element"
-             * 
-             * @return {string}
-             */
-            lib.container = function (element, attr) {
-                var elem = document.createElement(element);
-
-                elem.innerHTML = markup;
-
-                if (attr) {
-                    var attrs = attr.split(/ ,|, |,/);
-
-                    for (let x = 0; x < attrs.length; x++) {
-                        var key = attrs[x].split(/=/)[0],
-                            value = attrs[x].split(/=/)[1];
-
-                        helper.exe(elem, "setAttribute", key, value);
-                    }
-                }
-
-                markup = elem;
-
-                return markup;
-            }
-
-            /**
-             * removes unused placeholders
-             * 
-             * @param  {...any|string} placeholder 
-             * multiple unused placeholders can be defined, eg:
-             * 
-             * "unused1", "unused2", "unused3"
-             * 
-             * @return {string}
-             */
-            lib.clear = function (...placeholder) {
-                for (let i = 0; i < placeholder.length; i++) {
-                    var reg = new RegExp(`${before}${placeholder[i]}${after}`, "igm");
-
-                    markup = markup.replace(reg, "");
-                }
-            }
-
-            callback ? callback(lib) : null;
-
-            return markup;
-        }
-
-        /**
-         * stores the module for editing in another script
-         * 
-         * @param {string} name 
-         * the name to save the module as
-         * 
-         * @param {string} module 
-         * the module to save
-         * 
-         * @return {void}
-         */
-        proto.pushModule = function (name, module) {
-            this.pullModule[name] = module;
-        }
-
-        /**
-         * gets the saved module
-         * 
-         * @param {string} name 
-         * the name of the saved module to get
-         * 
-         * @return {string}
-         */
-        proto.pullModule = function (name) {
-            return this.pullModule[name];
+            return result;
         }
     }
 

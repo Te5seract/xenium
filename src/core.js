@@ -34,8 +34,10 @@ export var x = (function () {
         this.length = element.length;
 
         if (context) {
-            query.replaceSelector(this, xeniumContext.ini(element, context, this));
+            query.replaceSelector(this, xeniumContext.ini(element, context, selector, this));
         }
+
+        helper.setHook("init_hook", query.selector(selector), selector);
     }
 
     proto.splice = wrapper.splice;
@@ -48,7 +50,10 @@ export var x = (function () {
      * @return {array|number}
      */
     sel = function (selector, context) {
-        if (selector && !context) return new Xenium(query.selector(selector), selector);
+        if (selector && !context){
+
+            return new Xenium(query.selector(selector), selector);  
+        } 
         else if (context) {
             var xenium = new Xenium(query.selector(selector), selector, context);
 

@@ -38,7 +38,7 @@ export const xeniumSelector = (function () {
                 queryString += i !== selector.length - 1 ? selector[i]+", " : selector[i];
             }
         }
-        
+
         return queryString;
     }
 
@@ -95,7 +95,7 @@ export const xeniumSelector = (function () {
         if (selector) {
             // prevent unnecessary nesting of arrays in the selector, eg: [[["hi"]]]
             var originalSelector = selector;
-            
+
             //////////////////////////////////////
             // quick selectors
             if (isString(selector) && selector.match(/{#}|{dom}|{d}/i)) selector = document;
@@ -187,7 +187,7 @@ export const xeniumSelector = (function () {
             case "id":
                 if (!selector.match(/#/)) return "#"+selector;
             case "node":
-                if (!selector.match(/\[|\]/)) return `[${selector}]`;
+                if (!selector.match(/\[|\]/)) return `[${selector.replace(/@/, "")}]`;
             default:
                 return selector;
         }
@@ -538,6 +538,32 @@ export const xeniumSelector = (function () {
     var lib = {};
 
     /**
+     * gets the selector type
+     *
+     * @param {string} selector
+     * the selector string
+     *
+     * @return {string|boolean}
+    */
+    lib.selectorType = function (selector) {
+        var type = "";
+
+        if (selector.match(/\./g)) {
+            type = "class";
+        }
+        else if (selector.match(/#/g)) {
+            type = "id";
+        }
+        else if (selector.match(/@|\[.*?\]/g)) {
+            type = selector.replace(/@|\[\]/g, "");
+        } else {
+            type = false;
+        }
+
+        return type;
+    }
+
+    /**
      * main selector
      * 
      * @param {string|array|object|number} selector 
@@ -555,6 +581,7 @@ export const xeniumSelector = (function () {
         var element = prepareSelector(selector, function (selector, original) {
             var node = [],
                 nodeItem;
+
 
             for (let i = 0; i < selector.length; i++) {   
                 // all flag
@@ -590,6 +617,13 @@ export const xeniumSelector = (function () {
                 }
 
                 if (nodeItem) {
+                    // remove already selected nodes
+                    nodeItem.forEach((item, i) => {
+                        if (node.indexOf(item) !== -1) {
+                            nodeItem[i] = "";
+                        }
+                    });
+
                     if (nodeItem.length) {
                         for (let x = 0; x < nodeItem.length; x++) node.push(nodeItem[x]);
                     } else {
@@ -598,10 +632,14 @@ export const xeniumSelector = (function () {
                 }
             }
 
-            return node;
+            return node.filter(el => {
+                if (el !== "") {
+                    return el;
+                }
+            });
         });
-        
-        return unravelArray(element);
+
+        return element ? unravelArray(element) : element;
     }
 
     /**
