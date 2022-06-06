@@ -263,6 +263,22 @@ export const xeniumSelector = (function () {
     }
 
     /**
+     * makes sure the selector is in an array format
+     *
+     * @param {*} selector
+     * the selector to wrap
+     *
+     * @return {array}
+    */
+    function wrapSelector (selector) {
+        if (helper.type(selector) === "array") return selector;
+
+        if (helper.type(selector) === "object") {
+            return [selector];
+        }
+    }
+
+    /**
      * checks if the selector has a flag
      * @param {string} selector 
      * the element identifier
@@ -273,8 +289,8 @@ export const xeniumSelector = (function () {
      * @return {array}
      */
     function noFlag (selector, within) {
-        if (!isString(selector) && !within) return selector;
-        
+        if (!isString(selector) && helper.type(selector) !== "object" && !within) return wrapSelector(selector);
+
         selector = query(selector, within);
 
         return selector;
