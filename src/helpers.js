@@ -438,5 +438,48 @@ export const xeniumHelpers = (function () {
         }
     }
 
+    /**
+     * changes the case for a string
+     *
+     * @param {string} subject
+     * the string to change the case of
+     *
+     * @param {string} split
+     * what character to split the string by
+     *
+     * @param {string} join what character to 
+     * rejoin the string by
+     *
+     * @type {string} type
+     * the change case type (upper, upperCase, lower, lowerCase, camel, camelCase)
+     *
+     * @return {string}
+    */
+    f.changeCase = function (subject, split, join, type) {
+        if (type.match(/upper|upperCase/ig)) {
+            subject = subject.toUpperCase();
+        }
+        else if (type.match(/lower|lowerCase/)) {
+            subject.innerHTML = subject.innerHTML.toLowerCase();
+        }
+        else if (type.match(/camel|camelCase/ig)) {
+            let wordSplit = subject.split(split);
+
+            for (let x = 0; x < wordSplit.length; x++) {
+                if (x > 0) {
+                    var wordSplice = wordSplit[x].replace(/\n/g, "").split(""),
+                        firstLetter = wordSplice.splice(0, 1).join("").toUpperCase(),
+                        finalLetters = wordSplice.join("");
+
+                    wordSplit[x] = firstLetter+finalLetters;
+                }
+            }
+
+            subject = wordSplit.join(join);
+        }
+
+        return subject;
+    }
+
     return f;
 })();
