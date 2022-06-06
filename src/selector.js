@@ -289,7 +289,7 @@ export const xeniumSelector = (function () {
      * @return {array}
      */
     function noFlag (selector, within) {
-        if (!isString(selector) && helper.type(selector) !== "object" && !within) return wrapSelector(selector);
+        if (!isString(selector) && !within) return wrapSelector(selector);
 
         selector = query(selector, within);
 
@@ -597,7 +597,6 @@ export const xeniumSelector = (function () {
         var element = prepareSelector(selector, function (selector, original) {
             var node = [],
                 nodeItem;
-
 
             for (let i = 0; i < selector.length; i++) {   
                 // all flag
