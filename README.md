@@ -7,6 +7,6 @@ Start using the library now:
 
 ```javascript
 
-<script src="https://unpkg.com/@te5seract/xenium@2.1.2/dist/xenium.min.js"></script>
+<script src="https://unpkg.com/@te5seract/xenium/dist/xenium.min.js"></script>
 
 ```
