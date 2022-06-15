@@ -720,5 +720,24 @@ export const xeniumSelector = (function () {
         oldSelector.length = newSelector.length;
     }
 
+    /**
+     * gets the selected elements from the instance
+     * and turns the instance into an ordinary array
+     *
+     * @param {object} instance
+     * the xenium object (usually use "this" keyword within library)
+     *
+     * @return {array}
+    */
+    lib.getNodes = function (instance) {
+        let nodes = [];
+
+        for (let i = 0; i < instance.length; i++) {
+            nodes.push(instance[i]);
+        }
+
+        return nodes;
+    }
+
     return lib;
 })();

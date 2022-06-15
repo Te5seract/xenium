@@ -18,11 +18,15 @@ export const xeniumQuery = (function () {
          * 
          * @return {array|number}
          */
-        proto.within = function (selector) {
+        proto.within = function (selector, context) {
             query.updateSelector(this, selector);
 
             this.__proto__.selectorString = function () {
                 return selector;
+            }
+
+            if (context) {
+                query.replaceSelector(this, xeniumContext.ini(query.getNodes(this), context, selector, this));
             }
 
             return this;
@@ -89,7 +93,7 @@ export const xeniumQuery = (function () {
             }
 
             if (context) {
-                query.replaceSelector(this, xeniumContext.ini(this, context, this));
+                query.replaceSelector(this, xeniumContext.ini(query.selector(selector), context, selector, this));
             }
             
             return this;
