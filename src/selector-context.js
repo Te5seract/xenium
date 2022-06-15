@@ -16,7 +16,7 @@ export const xeniumContext = (function () {
      * of an attribute
     */
     fn.toggle = function ([node, context, selector, instance]) {
-        var sel = selector.replace(/ /, ""),
+        var sel = selector.replace(/ |{.*?}/g, ""),
             selectors = sel.split(","),
             contextLength = context.length - 1,
             current = [];
@@ -25,9 +25,8 @@ export const xeniumContext = (function () {
             const selType = query.selectorType(selStr);
 
             if (selType) {
-                node.forEach((node, i) => {
+                node.forEach(node => {
                     var value = helper.exe(node, "getAttribute", selType);
-
 
                     if (value) {
                         var index = context.indexOf(value),
