@@ -534,6 +534,8 @@ export const xeniumMisc = (function () {
             });
         }
 
+        sel.fetch = function () {}
+
         /**
          * gets the file list from an input node
          * 

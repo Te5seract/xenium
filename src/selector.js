@@ -1,4 +1,4 @@
-import { xeniumHelpers } from "./helpers";
+import { xeniumHelpers } from "./helpers.js";
 
 export const xeniumSelector = (function () {
     var helper = xeniumHelpers;
