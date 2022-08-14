@@ -1,24 +1,22 @@
-// selector
-import { xeniumSelector } from "./selector.js";
-
-// helpers
-import { xeniumHelpers } from "./helpers.js";
+// classes
+import MethodBuilder from "./classes/MethodBuilder.js";
+import XeniumRequire from "./classes/XeniumRequire.js";
 
 // methods
-import { xeniumQuery } from "./methods/methods-query.js";
-import { xeniumDom } from "./methods/methods-dom.js";
-import { xeniumEvents } from "./methods/methods-events.js";
-import { xeniumMisc } from "./methods/methods-misc.js";
+import XeniumDOM from "./methods/XeniumDOM.js";
+import XeniumQuery from "./methods/XeniumQuery.js";
+import XeniumEvents from "./methods/XeniumEvents.js";
+import XeniumMisc from "./methods/XeniumMisc.js";
 
 // context
 import { xeniumContext } from "./selector-context.js";
 
-export var x = (function () {
-    var wrapper = [],
-        sel,
+export const x = (function () {
+    const wrapper = [],
         proto = Xenium.prototype,
-        query = xeniumSelector,
-        helper = xeniumHelpers;
+        {helper, query} = new XeniumRequire().require("helper", "query");
+
+    let sel;
 
     function Xenium (element, selector, context) {
         if (!element) return [];
@@ -51,29 +49,32 @@ export var x = (function () {
      */
     sel = function (selector, context) {
         if (selector && !context){
-
-            return new Xenium(query.selector(selector), selector);  
+            return new Xenium(query.selector(selector), selector);
         } 
         else if (context) {
-            var xenium = new Xenium(query.selector(selector), selector, context);
+            const xenium = new Xenium(query.selector(selector), selector, context);
 
             return xenium.length > 1 ? xenium : xenium[0];
         } 
 
-        return new Xenium([document]);
+        const xenium = new Xenium([document]);
+
+        helper.setHook("instance_hook", xenium);
+
+        return xenium;
     }
 
-    // query methods 
-    xeniumQuery.set(proto, sel);
-
-    // dom methods
-    xeniumDom.set(proto, sel);
-
-    // events
-    xeniumEvents.set(proto, sel);
+    //const method = new MethodBuilder(proto, sel);
+    const props = { proto : proto, sel : sel },
+        method = new MethodBuilder(props, {
+            "XeniumDOM" : XeniumDOM,
+            "XeniumQuery" : XeniumQuery,
+            "XeniumEvents" : XeniumEvents,
+            "XeniumMisc" : XeniumMisc
+        });
 
     // misc methods
-    xeniumMisc.set(proto, sel);
+    //xeniumMisc.set(proto, sel);
 
     return sel;
 })();

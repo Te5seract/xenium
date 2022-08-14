@@ -1,8 +1,7 @@
-export const xeniumHelpers = (function () {
-    var f = {};
-
-    // hooks
-    f.hooks = {};
+export default class XeniumHelpers {
+    constructor () {
+        this.hooks = {};
+    }
 
     /**
      * executes a function 
@@ -18,7 +17,7 @@ export const xeniumHelpers = (function () {
      * 
      * @return {any}
      */
-    f.exe = function (element, hook, ...values) {
+    exe (element, hook, ...values) {
         values = this.unravelArray(values);
 
         var result = values.length > 0 ? element[hook].apply(element, values) : element[hook];
@@ -33,7 +32,7 @@ export const xeniumHelpers = (function () {
      * 
      * @returns
      */
-    f.unravelArray = function (array) {
+    unravelArray (array) {
         var object = array;
 
         if (object[0] instanceof Array) {
@@ -55,7 +54,7 @@ export const xeniumHelpers = (function () {
      * 
      * @return {array}
      */
-    f.nodeRelatives = function (element, method) {
+    nodeRelatives (element, method) {
         var nodes = [];
 
         if (!method.match(/children|childNodes/ig)) {
@@ -95,7 +94,7 @@ export const xeniumHelpers = (function () {
      * 
      * @return {string|number|object}
      */
-    f.arrayGet = function (mode, array, identifier) {
+    arrayGet (mode, array, identifier) {
         var idClear = identifier.replace(/\.|#/g, "");
 
         for (let i = 0; i < array.length; i++) {
@@ -126,7 +125,7 @@ export const xeniumHelpers = (function () {
      * 
      * @return {array}
      */
-    f.htmlToString = function (array) {
+    htmlToString (array) {
         if (!array.length || !array instanceof Array) array = [array];
 
         var strNodes = [];
@@ -153,7 +152,7 @@ export const xeniumHelpers = (function () {
      * 
      * @return {string}
      */
-    f.escape = function (string) {
+    escape (string) {
         var modified = "";
 
         modified = string.match(/(\[)/igm) ? string.replace(/(\[)/igm, "\\$1") : string;
@@ -182,7 +181,7 @@ export const xeniumHelpers = (function () {
      * 
      * @return {string}
      */
-    f.quote = function (items) {
+    quote (items) {
         var quoted = items.replace(/(\\|\^|\$|\.|\||\?|\*|\+|\(|\))/g, "\\$1");
 
         return quoted;
@@ -199,7 +198,7 @@ export const xeniumHelpers = (function () {
      * 
      * @return {array}
      */
-    f.arrayIndex = function (subject, needle) {
+    arrayIndex (subject, needle) {
         var indexes = [];
 
         for (let i = 0; i < subject.length; i++) {
@@ -226,7 +225,7 @@ export const xeniumHelpers = (function () {
      * 
      * @return {array}
      */
-    f.removeArrayIndex = function (subject, index) {
+    removeArrayIndex (subject, index) {
         for (let i = 0; i < index.length; i++) {
             subject[index[i]] = "";
         }
@@ -242,7 +241,7 @@ export const xeniumHelpers = (function () {
      * 
      * @return {array}
      */
-    f.splitHTML = function (html, letter) {
+    splitHTML (html, letter) {
         var nodeMatches = html.match(/(<.*?>)/ig);
 
         for (let i = 0; i < nodeMatches.length; i++) {
@@ -301,7 +300,7 @@ export const xeniumHelpers = (function () {
      * 
      * @return {boolean}
      */
-    f.elementIdentifier = function (nodes, identifier) {
+    elementIdentifier (nodes, identifier) {
         if ((identifier instanceof Array)) identifier = identifier[0];
 
         var noIdChars = identifier.replace(/\.|#/g, "");
@@ -333,7 +332,7 @@ export const xeniumHelpers = (function () {
      * 
      * @return {boolean}
      */
-    f.elementIdentifier = function (nodes, identifier) {
+    elementIdentifier (nodes, identifier) {
         var noIdChars = identifier.replace(/\.|#/g, "");
 
         for (let i = 0; i < nodes.length; i++) {
@@ -356,8 +355,11 @@ export const xeniumHelpers = (function () {
      * 
      * @return {string}
      */
-    f.type = function (item) {
+    type (item) {
         if (item instanceof Array) return "array";
+        else if (item instanceof HTMLElement) return "html";
+        else if (item instanceof NodeList) return "node-list";
+        else if (item && item.constructor.name === "Xenium") return "xenium";
         else if (item instanceof Object) return "object";
 
         return typeof item;
@@ -370,7 +372,7 @@ export const xeniumHelpers = (function () {
      * 
      * @return {object}
      */
-    f.extractIdentifier = function (element, validSelector) {
+    extractIdentifier (element, validSelector) {
         var classes = [],
             id = "",
             tag = element.localName ? element.localName : "";
@@ -390,11 +392,15 @@ export const xeniumHelpers = (function () {
             }
         }
 
-        return {
+
+        let result = {
             id : id,
             classList : classes && classes.length ? classes : "",
-            tag : tag
+            tag : tag,
+            attributes : f.getAttributes(element, "class", "id")
         }
+
+        return result;
     }
 
     /**
@@ -409,14 +415,29 @@ export const xeniumHelpers = (function () {
      *
      * @return {void}
     */
-    f.setHook = function (name, ...params) {
-        f.hooks[name] = params;
+    setHook (name, ...params) {
+        this.hooks[name] = params;
+
+        return;
     }
 
-    f.appendHook = function (name, ...params) {
-        if (f.hooks[name]) {
-            f.hooks[name].push(params);
+    /**
+     * appends more content to an already defined hook
+     *
+     * @param {string} name
+     * the hook you want to add data to
+     *
+     * @param {array} ...params
+     * the data to store in the defined hook
+     *
+     * @return {void}
+    */
+    appendHook (name, ...params) {
+        if (this.hooks[name]) {
+            this.hooks[name].push(params);
         }
+        
+        return;
     }
 
     /**
@@ -432,10 +453,12 @@ export const xeniumHelpers = (function () {
      *
      * @return {void}
     */
-    f.getHook = function (name, callback) {
-        if (f.hooks[name]) {
-            return callback(f.hooks[name]);
+    getHook (name, callback) {
+        if (this.hooks[name]) {
+            return callback(this.hooks[name]);
         }
+
+        return;
     }
 
     /**
@@ -455,7 +478,7 @@ export const xeniumHelpers = (function () {
      *
      * @return {string}
     */
-    f.changeCase = function (subject, split, join, type) {
+    changeCase (subject, split, join, type) {
         if (type.match(/upper|upperCase/ig)) {
             subject = subject.toUpperCase();
         }
@@ -481,5 +504,37 @@ export const xeniumHelpers = (function () {
         return subject;
     }
 
-    return f;
-})();
+    /**
+     * loops through an array
+     *
+     * @param {array} iterable
+     * the array to iterate through
+     *
+     * @param {callable} callback
+     * this callback will execute for each iteration
+     *
+     * @return {void}
+    */
+    each (iterable, callback) {
+        for (let i = 0; i < iterable.length; i++) {
+            callback(iterable[i], i);
+        }
+
+        return;
+    }
+
+    getAttributes (element, ...exclude) {
+        let attrs = element.attributes,
+            attrList = [];
+
+        for (let key in attrs) {
+            let nodeName = attrs[key].nodeName;
+
+            if (nodeName && f.type(nodeName) !== "function" && exclude.indexOf(nodeName) === -1) {
+                attrList.push(!nodeName.match(/id|class/i) ? `[${nodeName}]` : nodeName);
+            }
+        }
+
+        return !attrList.length ? null : attrList;
+    }
+} // end class

@@ -2,12 +2,13 @@
 import { xeniumSelector } from "./selector.js";
 
 // helpers
-import { xeniumHelpers } from "./helpers.js";
+//import { xeniumHelpers } from "./helpers.js";
+import XeniumHelpers from "./helpers.js";
 
 export const xeniumContext = (function () {
     var fn = {},
         query = xeniumSelector,
-        helper = xeniumHelpers;
+        helper = new XeniumHelpers();
 
     /**
      * toggles between attribute values, this function
@@ -43,7 +44,6 @@ export const xeniumContext = (function () {
         return current;
     }
 
-
     /**
      * returns and list of data attributes
      *
@@ -67,11 +67,37 @@ export const xeniumContext = (function () {
         return data;
     }
 
+    /**
+     * performs a context function, this will direct
+     * an object based context to perform funtions in the
+     * "fn" object above
+     *
+     * @param {array} context
+     * this parameter is the entire context parameter which
+     * includes the nodelist, context content, string based selector
+     * and the xenium instance
+     *
+     * @return {voic}
+    */
+    function doFunc ([node, context, selector, instance]) {
+        for (let key in context) {
+            fn[key]([node, context, selector, instance], context[key]);
+        }
+
+        return;
+    }
+
     return {
         ini : function (...params) {
             var [node, context, selector, instance] = params;
 
             if (context instanceof Array) return fn.toggle(params);
+
+            if (context instanceof Object) {
+                doFunc(params);
+
+                return node;
+            }
 
             if (helper.type(context) === "string") return fn[context](params);
         }

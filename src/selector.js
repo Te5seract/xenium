@@ -1,7 +1,7 @@
-import { xeniumHelpers } from "./helpers.js";
+import XeniumHelpers from "./helpers.js";
 
 export const xeniumSelector = (function () {
-    var helper = xeniumHelpers;
+    var helper = new XeniumHelpers();
     //////////////////////////////////////
     // --private
 
@@ -343,7 +343,6 @@ export const xeniumSelector = (function () {
                 if ((i * 2) - 1 > 0) {
                     if (!selector[(i * 2) - 1]) break;
 
-                
                     nodes.push(selector[(i * 2) - 1]);
                 }
             }
@@ -413,7 +412,7 @@ export const xeniumSelector = (function () {
             // if the flag number is greater than the number of selected nodes set the number to the length of the node list
             flag = flag > selector.length - 1 ? selector.length - 1 : flag;
 
-            return selector[flag];
+            return [selector[flag]];
         }
     }
 
@@ -594,6 +593,8 @@ export const xeniumSelector = (function () {
         // prepare selector for main query
         if (selector instanceof Array) return unravelArray(selector);
 
+        if (helper.type(selector) === "html") return [selector];
+
         var element = prepareSelector(selector, function (selector, original) {
             var node = [],
                 nodeItem;
@@ -630,6 +631,8 @@ export const xeniumSelector = (function () {
                     // no flag
                     nodeItem = noFlag(selector[i], within);
                 }
+
+                //nodeItem = helper.type(nodeItem) !== "array" ? [nodeItem] : nodeItem;
 
                 if (nodeItem) {
                     // remove already selected nodes
