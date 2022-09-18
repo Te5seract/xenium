@@ -247,8 +247,9 @@ export default class XeniumSelector extends XeniumFlags {
      * @return {void}
      */
     updateSelector (oldSelector, newSelector) {
-        const nodes = [],
-            {helper} = this.libs.require("helper");
+        let nodes = [];
+
+        const {helper} = this.libs.require("helper");
 
         // if the selector is a number send it to the nodes array
         if (helper.type(newSelector) === "number") nodes.push(newSelector);
