@@ -56,7 +56,7 @@ export default class XeniumSelector extends XeniumFlags {
                             return;
                         }
 
-                        queried.forEach(node => nodes.push(node));
+                        if (queried) queried.forEach(node => nodes.push(node));
                     } else {
                         nodes.push(shortHand);
                     }
@@ -247,8 +247,9 @@ export default class XeniumSelector extends XeniumFlags {
      * @return {void}
      */
     updateSelector (oldSelector, newSelector) {
-        const nodes = [],
-            {helper} = this.libs.require("helper");
+        let nodes = [];
+
+        const {helper} = this.libs.require("helper");
 
         // if the selector is a number send it to the nodes array
         if (helper.type(newSelector) === "number") nodes.push(newSelector);
