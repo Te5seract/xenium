@@ -56,7 +56,7 @@ export default class XeniumSelector extends XeniumFlags {
                             return;
                         }
 
-                        queried.forEach(node => nodes.push(node));
+                        if (queried) queried.forEach(node => nodes.push(node));
                     } else {
                         nodes.push(shortHand);
                     }
