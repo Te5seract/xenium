@@ -78,10 +78,6 @@ export default class XeniumQuery extends XeniumRequire {
 
         query.replaceSelector(this, query.selector(selector));
 
-        //this.__proto__.selectorString = function () {
-            //return selector;
-        //}
-
         if (ctx) {
             query.replaceSelector(this, context.ini(query.selector(selector), ctx, selector, this));
         }

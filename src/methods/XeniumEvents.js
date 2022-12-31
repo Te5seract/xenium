@@ -26,11 +26,6 @@ function isTarget (target, identifier) {
 }
 
 export default class XeniumEvents extends XeniumRequire {
-    test () {
-        const {helper} = super.require("helper");
-
-        console.log(helper);
-    }
     /**
      * checks if the target of the event has the same class / id / tag name
      * as the clicked element 

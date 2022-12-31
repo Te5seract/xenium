@@ -571,4 +571,42 @@ export default class XeniumDOM extends XeniumRequire {
             }
         }
     }
+
+    /**
+     * checks if a selected node has a particular data attribute with
+     * a particular value
+     *
+     * x(node).isDataType("x-example", "value");
+     * 
+     * @param {string} dataAttr
+     * the attribute name
+     *
+     * @param {string} value
+     * the attribute value
+     *
+     * @return {boolean}
+    */
+    isDataType (dataAttr, value) {
+        const attributes = this[0].attributes,
+            keys = Object.keys(attributes);
+
+        dataAttr = dataAttr.replace(/@/gm, "");
+
+        if (!this[0].dataset[dataAttr]) {
+            for (let i = 0; i < keys.length; i++) {
+                const nodeName = attributes[keys[i]].nodeName,
+                    nodeValue = attributes[keys[i]].nodeValue;
+
+                if (nodeName === dataAttr && nodeValue === value) {
+                    return true;
+                }
+            }
+        } else {
+            if (this[0].dataset[dataAttr] === value) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 } // end class
