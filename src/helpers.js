@@ -103,7 +103,8 @@ export default class XeniumHelpers {
                 if (mode.match(/node|nodes|query/i)) {
                     if (array[i].hasAttribute("class") && array[i].classList.contains(idClear) 
                         || array[i].hasAttribute("id") && array[i].getAttribute("id") === idClear 
-                        || array[i].localName === idClear) {
+                        || array[i].localName === idClear
+                        || array[i].hasAttribute(identifier)) {
                         return array[i];
                     }
                 }

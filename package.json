@@ -1,6 +1,6 @@
 {
   "name": "@te5seract/xenium",
-  "version": "3.1.2",
+  "version": "3.1.3",
   "description": "javascript helper library",
   "main": "src/core.js",
   "scripts": {
@@ -18,8 +18,8 @@
   },
   "homepage": "https://github.com/Te5seract/xenium#readme",
   "devDependencies": {
-    "terser-webpack-plugin": "^5.3.1",
-    "webpack": "^5.72.1",
-    "webpack-cli": "^4.9.2"
+    "terser-webpack-plugin": "^5.3.6",
+    "webpack": "^5.75.0",
+    "webpack-cli": "^4.10.0"
   }
 }
