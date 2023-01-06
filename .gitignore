@@ -1,7 +1,5 @@
 index.php
 node_modules
-docker-compose.yml
-Dockerfile
 conf
 .env
 test

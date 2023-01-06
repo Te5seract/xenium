@@ -1,0 +1,23 @@
+version: "3.8"
+
+services:
+  nginx:
+    image: nginx:${NGINX_VERSION}
+    volumes: 
+    - ./conf/nginx.conf:/etc/nginx/nginx.conf
+    - ./:/public/www
+    ports:
+      - 8002:80
+    container_name: xenium_nginx_service
+    restart: unless-stopped
+
+  php:
+    build: ./
+    container_name: xenium_php_8_container
+    restart: unless-stopped
+    volumes:
+      - ./:/public/www
+
+networks:
+  mysql_db_network:
+    external: true
