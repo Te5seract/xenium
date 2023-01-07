@@ -80,6 +80,7 @@ export default class XeniumSelector extends XeniumFlags {
 
         if (selector.match(/w/i)) return window;
         else if (selector.match(/b/i)) return document.body;
+        else if (selector.match(/h/i)) return document.head;
     }
 
     /**
