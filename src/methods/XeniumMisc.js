@@ -69,6 +69,7 @@ function xhr (options) {
         error = options.error ? options.error : null,
         success = options.success ? options.success : null,
         headers = options.headers ? options.headers : null,
+        request = options.request ? options.request : null,
         formData = options.formData ? options.formData : null;
 
     if (method.match(/GET/i) && data) {
@@ -76,6 +77,8 @@ function xhr (options) {
     }
 
     xr.open(method, url);
+
+    request ? request(xr) : null;
 
     if (!formData) {
         xr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -368,6 +371,7 @@ export default class XeniumMisc extends XeniumRequire {
             done = options.done ? options.done : null,
             error = options.error ? options.error : null,
             success = options.success ? options.success : null,
+            request = options.request ? options.request : null,
             headers = options.headers ? options.headers : null,
             formData = options.formData ? options.formData : null;
 
@@ -383,6 +387,9 @@ export default class XeniumMisc extends XeniumRequire {
             },
             success : (data) => {
                 success ? success(data) : success;
+            },
+            request : (obj) => {
+                request ? request(obj) : request;
             },
             formData : formData,
             headers : headers
@@ -425,6 +432,7 @@ export default class XeniumMisc extends XeniumRequire {
             error = options.error ? options.error : null,
             success = options.success ? options.success : null,
             headers = options.headers ? options.headers : null,
+            request = options.request ? options.request : null,
             formData = options.formData ? options.formData : null;
 
         xhr({
@@ -439,6 +447,9 @@ export default class XeniumMisc extends XeniumRequire {
             },
             success : (data) => {
                 success ? success(data) : success;
+            },
+            request : (obj) => {
+                request ? request(obj) : request;
             },
             formData : formData,
             headers : headers
@@ -486,6 +497,7 @@ export default class XeniumMisc extends XeniumRequire {
             error = options.error ? options.error : null,
             success = options.success ? options.success : null,
             headers = options.headers ? options.headers : null,
+            request = options.request ? options.request : null,
             formData = options.formData ? options.formData : null;
 
         xhr({
@@ -500,6 +512,9 @@ export default class XeniumMisc extends XeniumRequire {
             },
             success : (data) => {
                 success ? success(data) : success;
+            },
+            request : (obj) => {
+                request ? request(obj) : request;
             },
             formData : formData,
             headers : headers
