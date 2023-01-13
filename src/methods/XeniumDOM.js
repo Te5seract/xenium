@@ -299,7 +299,11 @@ export default class XeniumDOM extends XeniumRequire {
      */
     append (...nodes) {
         const {helper} = super.require("helper"),
-            nodesList = helper.unravelArray(nodes[0]);
+            nodesList = [];
+
+        nodes.forEach(node => {
+            nodesList.push(node[0]);
+        });
 
         for (let i = 0; i < this.length; i++) {
             for (let x = 0; x < nodesList.length; x++) {
