@@ -429,6 +429,30 @@ export default class XeniumDOM extends XeniumRequire {
     }
 
     /**
+     * gets a parent element from a specified level
+     *
+     * @param {int} level 
+     * the ancestor level to retrieve the parent element from
+     *
+     * @return {bool|HTMLElement}
+    */
+    parentLevels (level) {
+        const {helper} = super.require("helper");
+
+        let found = false;
+
+        level = level === undefined ? 0 : level;
+
+        helper.nodeRelatives(this[0], "parentNode").forEach((node, i) => {
+            if (i === level) {
+                found = node;
+            }
+        });
+
+        return found;
+    }
+
+    /**
      * gets the dom index for a particular node, intended to be used with the 
      * events method. This method must be stored in a variable to work correctly
      * 
